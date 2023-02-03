@@ -2,6 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 
+require('dotenv').config()
+
+console.log(process.env);
+
+const databaseUrl = process.env.DATABASE_URL;
+const port = process.env.PORT || 3000;
+
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -11,7 +19,7 @@ app.use(express.static("public"));
 
 
 mongoose.set('strictQuery', false);
-mongoose.connect("mongodb://0.0.0.0:27017/todoListDB");
+mongoose.connect(databaseUrl);
 
 const itemsSchema = new mongoose.Schema({
   name: String
@@ -38,16 +46,6 @@ const item3 = new Item({
 });
 
 const defaultItems = [item1, item2, item3];
-
-// Item.insertMany(defaultItems, (err) => {
-//   if(err) {
-//     console.log(err);
-//   } else {
-//     console.log("success");
-//   }
-// });
-
-
 
 const workItems = [];
 
@@ -149,6 +147,6 @@ app.get("/about", function (req, res) {
   res.render("about");
 });
 
-app.listen(3000, function () {
-  console.log("Server started on port 3000");
+app.listen(port, function () {
+  console.log("Server started on port " + port);
 });
